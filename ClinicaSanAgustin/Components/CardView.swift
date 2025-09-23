@@ -46,7 +46,7 @@ class CardView: UIView {
         return stack
     }()
 
-    init(title: String, subtitle: String?, buttonTitle: String = "Abrir", target: Any?, action: Selector, spacing: CGFloat = 24) {
+    init(title: String, subtitle: String?, buttonTitle: String = "Abrir", target: Any?, action: Selector?, spacing: CGFloat = 24) {
         self.customSpacing = spacing
         super.init(frame: .zero)
         setupView()
@@ -72,12 +72,12 @@ class CardView: UIView {
         ])
     }
 
-    private func configure(title: String, subtitle: String?, buttonTitle: String, target: Any?, action: Selector) {
+    private func configure(title: String, subtitle: String?, buttonTitle: String, target: Any?, action: Selector?) {
         titleLabel.text = title
         subtitleLabel.text = subtitle
         actionButton.setTitle(buttonTitle, for: .normal)
         actionButton.removeTarget(nil, action: nil, for: .allEvents)
-        if let target {
+        if let target, let action {
             actionButton.addTarget(target, action: action, for: .touchUpInside)
         }
         subtitleLabel.isHidden = subtitle == nil

@@ -1,4 +1,3 @@
-
 import UIKit
 
 final class CheckInViewController: UIViewController {
@@ -8,9 +7,14 @@ final class CheckInViewController: UIViewController {
     // UI
     private lazy var moodSlider: UISlider = { let s = UISlider(); s.minimumValue = 0; s.maximumValue = 10; s.translatesAutoresizingMaskIntoConstraints = false; return s }()
     private lazy var cravingSlider: UISlider = { let s = UISlider(); s.minimumValue = 0; s.maximumValue = 10; s.translatesAutoresizingMaskIntoConstraints = false; return s }()
-    private lazy var sleepField: UITextField = {
-        let t = UITextField(); t.placeholder = "Horas de sueño"; t.keyboardType = .numberPad; t.borderStyle = .roundedRect; t.translatesAutoresizingMaskIntoConstraints = false; return t
+    private let sleepRanges = ["3-4 horas", "5-7 horas", "más de 8 horas"]
+    private lazy var sleepRangeStack: UIStackView = {
+        let s = UIStackView.h(8)
+        s.alignment = .center
+        s.translatesAutoresizingMaskIntoConstraints = false
+        return s
     }()
+    private var selectedSleepRange: String?
     private let triggerOptions = ["Estrés","Conflicto","Lugares","Personas","Sueño pobre","Dolor"]
     private lazy var triggersStack: UIStackView = { let s = UIStackView.h(8); s.alignment = .leading; s.translatesAutoresizingMaskIntoConstraints = false; return s }()
     private lazy var notesView: UITextView = {
@@ -35,6 +39,7 @@ final class CheckInViewController: UIViewController {
         let stack = UIStackView.v(12); stack.translatesAutoresizingMaskIntoConstraints = false
         let moodLbl = UILabel(); moodLbl.text = "Ánimo (0–10)"; moodLbl.font = .boldSystemFont(ofSize: 16)
         let cravingLbl = UILabel(); cravingLbl.text = "Craving (0–10)"; cravingLbl.font = .boldSystemFont(ofSize: 16)
+        let sleepLbl = UILabel(); sleepLbl.text = "Horas de sueño"; sleepLbl.font = .boldSystemFont(ofSize: 16)
         let triggersLbl = UILabel(); triggersLbl.text = "Gatillantes"; triggersLbl.font = .boldSystemFont(ofSize: 16)
         let notesLbl = UILabel(); notesLbl.text = "Notas"; notesLbl.font = .boldSystemFont(ofSize: 16)
 
@@ -43,7 +48,8 @@ final class CheckInViewController: UIViewController {
         stack.addArrangedSubview(moodSlider)
         stack.addArrangedSubview(cravingLbl)
         stack.addArrangedSubview(cravingSlider)
-        stack.addArrangedSubview(sleepField)
+        stack.addArrangedSubview(sleepLbl)
+        stack.addArrangedSubview(sleepRangeStack)
         stack.addArrangedSubview(triggersLbl)
         stack.addArrangedSubview(triggersStack)
         stack.addArrangedSubview(notesLbl)
@@ -55,6 +61,26 @@ final class CheckInViewController: UIViewController {
             stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
+        buildSleepRangeChips()
+    }
+
+    private func buildSleepRangeChips() {
+        sleepRangeStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        sleepRanges.forEach { range in
+            let b = PillButton(type: .system)
+            b.setTitle(range, for: .normal)
+            b.addAction(UIAction(handler: { [weak self, weak b] _ in
+                self?.selectSleepRange(range, button: b)
+            }), for: .touchUpInside)
+            sleepRangeStack.addArrangedSubview(b)
+        }
+    }
+
+    private func selectSleepRange(_ range: String, button: UIButton?) {
+        selectedSleepRange = range
+        sleepRangeStack.arrangedSubviews.forEach {
+            ($0 as? UIButton)?.isSelected = ($0 as? UIButton)?.title(for: .normal) == range
+        }
     }
 
     private func buildTriggerChips() {
@@ -70,7 +96,15 @@ final class CheckInViewController: UIViewController {
     @objc private func saveTap() {
         let mood = Int(moodSlider.value.rounded())
         let craving = Int(cravingSlider.value.rounded())
-        let sleep = Int(sleepField.text ?? "0") ?? 0
+        // Map sleep range to representative value
+        let sleep: Int = {
+            switch selectedSleepRange {
+            case "3-4 horas": return 4
+            case "5-7 horas": return 6
+            case "más de 8 horas": return 8
+            default: return 0
+            }
+        }()
         let selected = triggersStack.arrangedSubviews.compactMap { ($0 as? UIButton)?.isSelected == true ? ($0 as? UIButton)?.title(for: .normal) : nil }
         let check = CheckIn(id: UUID().uuidString, date: Date(), mood: mood, craving: craving, sleepHours: sleep, triggers: selected, notes: notesView.text)
         storage.save(checkIn: check)
