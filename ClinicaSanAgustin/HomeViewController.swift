@@ -1,4 +1,3 @@
-
 import UIKit
 
 final class HomeViewController: UIViewController {
@@ -22,28 +21,6 @@ final class HomeViewController: UIViewController {
         return s
     }()
 
-    private func card(title: String, subtitle: String?, action: Selector) -> UIView {
-        let v = UIView(); v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = .secondarySystemBackground; v.layer.cornerRadius = 16
-        let t = UILabel(); t.font = .boldSystemFont(ofSize: 18); t.text = title
-        let s = UILabel(); s.font = .systemFont(ofSize: 14); s.textColor = .secondaryLabel; s.numberOfLines = 0; s.text = subtitle
-        let b = UIButton(type: .system); b.setTitle("Abrir", for: .normal); b.addTarget(self, action: action, for: .touchUpInside)
-        let stack = UIStackView.v(8)
-        stack.addArrangedSubview(t); if let subtitle = subtitle { s.text = subtitle; stack.addArrangedSubview(s) }
-        stack.addArrangedSubview(b)
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.layoutMargins = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
-        stack.isLayoutMarginsRelativeArrangement = true
-        v.addSubview(stack)
-        NSLayoutConstraint.activate([
-            stack.topAnchor.constraint(equalTo: v.topAnchor),
-            stack.leadingAnchor.constraint(equalTo: v.leadingAnchor),
-            stack.trailingAnchor.constraint(equalTo: v.trailingAnchor),
-            stack.bottomAnchor.constraint(equalTo: v.bottomAnchor)
-        ])
-        return v
-    }
-
     init(storage: StorageService, riskEngine: RiskEngine) {
         self.storage = storage; self.riskEngine = riskEngine
         super.init(nibName: nil, bundle: nil)
@@ -60,9 +37,9 @@ final class HomeViewController: UIViewController {
     private func setupHierarchy() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentStack)
-        contentStack.addArrangedSubview(card(title: "Check‑in de hoy", subtitle: "Registra ánimo, craving y sueño.", action: #selector(openCheckIn)))
-        contentStack.addArrangedSubview(card(title: "Solicitar consulta", subtitle: "Pide una cita presencial o virtual.", action: #selector(openAppointment)))
-        contentStack.addArrangedSubview(card(title: "Plan de acción", subtitle: "Estrategias rápidas ante craving.", action: #selector(openPlanAction)))
+        contentStack.addArrangedSubview(CardView(title: "Como te sientes el dia de hoy", subtitle: "Registra ánimo, craving y sueño.", target: self, action: #selector(openCheckIn)))
+        contentStack.addArrangedSubview(CardView(title: "Solicitar consulta", subtitle: "Pide una cita presencial o virtual.", target: self, action: #selector(openAppointment)))
+        contentStack.addArrangedSubview(CardView(title: "Plan de acción", subtitle: "Estrategias rápidas ante craving.", target: self, action: #selector(openPlanAction)))
         // Últimos check‑ins
         let recent = storage.loadCheckIns().prefix(5)
         if !recent.isEmpty {

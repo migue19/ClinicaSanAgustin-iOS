@@ -6,6 +6,6 @@
 //
 import UIKit
 extension UIColor {
-    static let primaryColor: UIColor = .init(named: "PrimaryColor") ?? .blue // System Blue
-    static let secondaryColor: UIColor = .init(named: "SecondaryColor") ?? .black // System Green
+//    static let primaryColor: UIColor = .init(named: "PrimaryColor") ?? .blue // System Blue
+//    static let secondaryColor: UIColor = .init(named: "SecondaryColor") ?? .black // System Green
 }
