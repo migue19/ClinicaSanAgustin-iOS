@@ -26,6 +26,7 @@ final class PillButton: UIButton {
         setTitleColor(.white, for: .selected)
         setTitleColor(.label, for: .normal)
         backgroundColor = .systemGray6
+        titleLabel?.textAlignment = .center
     }
     override var isSelected: Bool {
         didSet {
