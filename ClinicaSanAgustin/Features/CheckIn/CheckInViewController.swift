@@ -3,7 +3,7 @@ import UIKit
 final class CheckInViewController: UIViewController {
     private let storage: StorageService
     private let riskEngine: RiskEngine
-
+    
     // UI
     private lazy var moodSlider: UISlider = { let s = UISlider(); s.minimumValue = 0; s.maximumValue = 10; s.translatesAutoresizingMaskIntoConstraints = false; return s }()
     private lazy var cravingSlider: UISlider = { let s = UISlider(); s.minimumValue = 0; s.maximumValue = 10; s.translatesAutoresizingMaskIntoConstraints = false; return s }()
@@ -21,20 +21,20 @@ final class CheckInViewController: UIViewController {
         let v = UITextView(); v.layer.cornerRadius = 12; v.layer.borderWidth = 1; v.layer.borderColor = UIColor.separator.cgColor; v.translatesAutoresizingMaskIntoConstraints = false; v.heightAnchor.constraint(equalToConstant: 100).isActive = true; return v
     }()
     private lazy var saveButton: UIButton = { let b = UIButton(type: .system); b.setTitle("Guardar check‑in", for: .normal); b.addTarget(self, action: #selector(saveTap), for: .touchUpInside); b.translatesAutoresizingMaskIntoConstraints = false; return b }()
-
+    
     init(storage: StorageService, riskEngine: RiskEngine) {
         self.storage = storage; self.riskEngine = riskEngine
         super.init(nibName: nil, bundle: nil)
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Check‑in"
         view.backgroundColor = .systemBackground
         setupHierarchy(); buildTriggerChips()
     }
-
+    
     private func setupHierarchy() {
         let stack = UIStackView.v(12); stack.translatesAutoresizingMaskIntoConstraints = false
         let moodLbl = UILabel(); moodLbl.text = "Ánimo (0–10)"; moodLbl.font = .boldSystemFont(ofSize: 16)
@@ -42,7 +42,7 @@ final class CheckInViewController: UIViewController {
         let sleepLbl = UILabel(); sleepLbl.text = "Horas de sueño"; sleepLbl.font = .boldSystemFont(ofSize: 16)
         let triggersLbl = UILabel(); triggersLbl.text = "Gatillantes"; triggersLbl.font = .boldSystemFont(ofSize: 16)
         let notesLbl = UILabel(); notesLbl.text = "Notas"; notesLbl.font = .boldSystemFont(ofSize: 16)
-
+        
         view.addSubview(stack)
         stack.addArrangedSubview(moodLbl)
         stack.addArrangedSubview(moodSlider)
@@ -55,7 +55,7 @@ final class CheckInViewController: UIViewController {
         stack.addArrangedSubview(notesLbl)
         stack.addArrangedSubview(notesView)
         stack.addArrangedSubview(saveButton)
-
+        
         NSLayoutConstraint.activate([
             stack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -63,7 +63,7 @@ final class CheckInViewController: UIViewController {
         ])
         buildSleepRangeChips()
     }
-
+    
     private func buildSleepRangeChips() {
         sleepRangeStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
         sleepRanges.forEach { range in
@@ -75,24 +75,33 @@ final class CheckInViewController: UIViewController {
             sleepRangeStack.addArrangedSubview(b)
         }
     }
-
+    
     private func selectSleepRange(_ range: String, button: UIButton?) {
         selectedSleepRange = range
         sleepRangeStack.arrangedSubviews.forEach {
             ($0 as? UIButton)?.isSelected = ($0 as? UIButton)?.title(for: .normal) == range
         }
     }
-
+    
     private func buildTriggerChips() {
         triggersStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        triggerOptions.forEach { name in
-            let b = PillButton(type: .system)
-            b.setTitle(name, for: .normal)
-            b.addAction(UIAction(handler: { [weak b] _ in b?.isSelected.toggle() }), for: .touchUpInside)
-            triggersStack.addArrangedSubview(b)
+        let chipsPerRow = 3
+        let rows = stride(from: 0, to: triggerOptions.count, by: chipsPerRow).map {
+            Array(triggerOptions[$0..<min($0+chipsPerRow, triggerOptions.count)])
+        }
+        rows.forEach { rowOptions in
+            let rowStack = UIStackView.h(8)
+            rowStack.alignment = .leading
+            rowOptions.forEach { name in
+                let b = PillButton(type: .system)
+                b.setTitle(name, for: .normal)
+                b.addAction(UIAction(handler: { [weak b] _ in b?.isSelected.toggle() }), for: .touchUpInside)
+                rowStack.addArrangedSubview(b)
+            }
+            triggersStack.addArrangedSubview(rowStack)
         }
     }
-
+    
     @objc private func saveTap() {
         let mood = Int(moodSlider.value.rounded())
         let craving = Int(cravingSlider.value.rounded())
