@@ -10,7 +10,7 @@ final class PillButton: UIButton {
     private func setup() {
         layer.cornerRadius = 16
         layer.masksToBounds = true
-        contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+        //contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
         setTitleColor(.white, for: .selected)
         setTitleColor(.label, for: .normal)
         backgroundColor = .systemGray6
