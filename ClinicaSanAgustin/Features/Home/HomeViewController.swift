@@ -29,7 +29,7 @@ final class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "San Agustín – Paciente"
+        title = "Home"
         view.backgroundColor = .systemBackground
         setupHierarchy(); setupConstraints()
     }
