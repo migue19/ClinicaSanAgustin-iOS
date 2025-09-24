@@ -16,8 +16,9 @@ final class LoginViewController: UIViewController {
     private let passwordField: UITextField = {
         let f = UITextField(); f.placeholder = "Contraseña"; f.borderStyle = .roundedRect; f.isSecureTextEntry = true; return f
     }()
-    private let loginButton: UIButton = {
-        let b = UIButton(type: .system); b.setTitle("Iniciar sesión", for: .normal); b.translatesAutoresizingMaskIntoConstraints = false; return b
+    private let loginButton: PrimaryButton = {
+        let b = PrimaryButton(title: "Iniciar sesión")
+        return b
     }()
     private let registerButton: UIButton = {
         let b = UIButton(type: .system); b.setTitle("Registrarse", for: .normal); b.translatesAutoresizingMaskIntoConstraints = false; return b

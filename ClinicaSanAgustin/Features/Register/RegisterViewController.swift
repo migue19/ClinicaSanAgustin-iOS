@@ -4,6 +4,9 @@ final class RegisterViewController: UIViewController {
     var onRegisterSuccess: (() -> Void)?
     var onShowLogin: (() -> Void)?
 
+    private let nameField: UITextField = {
+        let f = UITextField(); f.placeholder = "Nombre"; f.borderStyle = .roundedRect; f.autocapitalizationType = .words; return f
+    }()
     private let emailField: UITextField = {
         let f = UITextField(); f.placeholder = "Correo electrónico"; f.borderStyle = .roundedRect; f.autocapitalizationType = .none; return f
     }()
@@ -13,8 +16,9 @@ final class RegisterViewController: UIViewController {
     private let confirmField: UITextField = {
         let f = UITextField(); f.placeholder = "Confirmar contraseña"; f.borderStyle = .roundedRect; f.isSecureTextEntry = true; return f
     }()
-    private let registerButton: UIButton = {
-        let b = UIButton(type: .system); b.setTitle("Registrarse", for: .normal); b.translatesAutoresizingMaskIntoConstraints = false; return b
+    private let registerButton: PrimaryButton = {
+        let b = PrimaryButton(title: "Registrarse")
+        return b
     }()
     private let loginButton: UIButton = {
         let b = UIButton(type: .system); b.setTitle("Ya tengo cuenta", for: .normal); b.translatesAutoresizingMaskIntoConstraints = false; return b
@@ -28,7 +32,7 @@ final class RegisterViewController: UIViewController {
     }
 
     private func setupUI() {
-        let stack = UIStackView(arrangedSubviews: [emailField, passwordField, confirmField, registerButton, loginButton])
+        let stack = UIStackView(arrangedSubviews: [nameField, emailField, passwordField, confirmField, registerButton, loginButton])
         stack.axis = .vertical; stack.spacing = 16; stack.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stack)
         NSLayoutConstraint.activate([
@@ -41,7 +45,8 @@ final class RegisterViewController: UIViewController {
     }
 
     @objc private func registerTap() {
-        guard let email = emailField.text, !email.isEmpty,
+        guard let name = nameField.text, !name.isEmpty,
+              let email = emailField.text, !email.isEmpty,
               let password = passwordField.text, !password.isEmpty,
               let confirm = confirmField.text, password == confirm else {
             showAlert("Completa todos los campos y asegúrate que las contraseñas coincidan")
