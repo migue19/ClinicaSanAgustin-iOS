@@ -21,7 +21,7 @@ final class CheckInViewController: UIViewController {
         s.translatesAutoresizingMaskIntoConstraints = false
         return s
     }()
-    private let sleepRanges = ["3-4 horas", "5-7 horas", "8 horas", "Más de 8 horas"]
+    private let sleepRanges = ["3-4 horas", "5-7 horas", "8\nhoras", "Más de 8 horas"]
     private lazy var sleepRangeStack: UIStackView = {
         let s = UIStackView.h(8)
         s.alignment = .center
@@ -32,9 +32,29 @@ final class CheckInViewController: UIViewController {
     private let triggerOptions = ["Estrés","Conflicto","Lugares", "Personas", "Falta de sueño","Dolor"]
     private lazy var triggersStack: UIStackView = { let s = UIStackView.v(8); s.alignment = .leading; s.translatesAutoresizingMaskIntoConstraints = false; return s }()
     private lazy var notesView: UITextView = {
-        let v = UITextView(); v.layer.cornerRadius = 12; v.layer.borderWidth = 1; v.layer.borderColor = UIColor.separator.cgColor; v.translatesAutoresizingMaskIntoConstraints = false; v.heightAnchor.constraint(equalToConstant: 100).isActive = true; return v
+        let v = UITextView();
+        v.layer.cornerRadius = 12;
+        v.layer.borderWidth = 1;
+        v.layer.borderColor = UIColor.separator.cgColor;
+        let padding: CGFloat = 12
+        v.font = .systemFont(ofSize: 16)
+        v.contentInset = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
+        v.translatesAutoresizingMaskIntoConstraints = false;
+        v.heightAnchor.constraint(equalToConstant: 100).isActive = true;
+        return v
     }()
-    private lazy var saveButton: UIButton = { let b = UIButton(type: .system); b.setTitle("Guardar check‑in", for: .normal); b.addTarget(self, action: #selector(saveTap), for: .touchUpInside); b.translatesAutoresizingMaskIntoConstraints = false; return b }()
+    private lazy var saveButton: UIButton = {
+        var config = UIButton.Configuration.bordered()
+        config.baseBackgroundColor = .primaryC
+        config.baseForegroundColor = .white
+        config.title = "Guardar"
+        config.buttonSize = .large
+        let b = UIButton(configuration: config, primaryAction: UIAction {
+            _ in self.saveTap()
+        })
+        b.translatesAutoresizingMaskIntoConstraints = false;
+        return b
+    }()
     
     // Mood faces
     private let moodFaces: [(emoji: String, value: Int)] = [
@@ -88,7 +108,7 @@ final class CheckInViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Check‑in"
+        title = "Como me siento Hoy"
         view.backgroundColor = .systemBackground
         setupHierarchy(); buildTriggerChips()
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -105,7 +125,7 @@ final class CheckInViewController: UIViewController {
         let moodLbl = UILabel(); moodLbl.text = "Estado de Ánimo:"; moodLbl.font = .boldSystemFont(ofSize: 16)
         let cravingLbl = UILabel(); cravingLbl.text = "Nivel de Craving(Antojo) (0–10)"; cravingLbl.font = .boldSystemFont(ofSize: 16)
         let sleepLbl = UILabel(); sleepLbl.text = "Horas de sueño"; sleepLbl.font = .boldSystemFont(ofSize: 16)
-        let triggersLbl = UILabel(); triggersLbl.text = "Gatillantes"; triggersLbl.font = .boldSystemFont(ofSize: 16)
+        let triggersLbl = UILabel(); triggersLbl.text = "Detonantes"; triggersLbl.font = .boldSystemFont(ofSize: 16)
         let notesLbl = UILabel(); notesLbl.text = "Notas"; notesLbl.font = .boldSystemFont(ofSize: 16)
         view.addSubview(stack)
         stack.addArrangedSubview(moodLbl)
@@ -142,6 +162,7 @@ final class CheckInViewController: UIViewController {
             rowOptions.forEach { range in
                 let b = PillButton(type: .system)
                 b.setTitle(range, for: .normal)
+                b.isSelected = selectedSleepRange == range
                 b.addAction(UIAction(handler: { [weak self, weak b] _ in
                     self?.selectSleepRange(range, button: b)
                 }), for: .touchUpInside)
@@ -150,11 +171,14 @@ final class CheckInViewController: UIViewController {
             sleepRangeStack.addArrangedSubview(rowStack)
         }
     }
-    
+
     private func selectSleepRange(_ range: String, button: UIButton?) {
         selectedSleepRange = range
-        sleepRangeStack.arrangedSubviews.forEach {
-            ($0 as? UIButton)?.isSelected = ($0 as? UIButton)?.title(for: .normal) == range
+        sleepRangeStack.arrangedSubviews.forEach { row in
+            guard let rowStack = row as? UIStackView else { return }
+            rowStack.arrangedSubviews.forEach {
+                ($0 as? UIButton)?.isSelected = ($0 as? UIButton)?.title(for: .normal) == range
+            }
         }
     }
     

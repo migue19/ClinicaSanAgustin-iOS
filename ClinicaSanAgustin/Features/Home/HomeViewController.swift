@@ -44,12 +44,15 @@ final class HomeViewController: UIViewController {
         let recent = storage.loadCheckIns().prefix(5)
         if !recent.isEmpty {
             let box = UIView(); box.translatesAutoresizingMaskIntoConstraints = false; box.backgroundColor = .secondarySystemBackground; box.layer.cornerRadius = 16
-            let title = UILabel(); title.text = "Últimos check‑ins"; title.font = .boldSystemFont(ofSize: 18)
+            let title = UILabel();
+            title.text = "Últimos Estados Guardados";
+            title.font = .boldSystemFont(ofSize: 18)
             let stack = UIStackView.v(6); stack.translatesAutoresizingMaskIntoConstraints = false
             stack.addArrangedSubview(title)
             let df = DateFormatter(); df.dateStyle = .medium; df.timeStyle = .short
             for c in recent {
                 let l = UILabel()
+                l.numberOfLines = 0
                 let flag = riskEngine.evaluate(checkIn: c).level
                 l.text = "• " + df.string(from: c.date) + "  –  Ánimo: \(c.mood), Craving: \(c.craving) [\(flag.rawValue.uppercased())]"
                 l.font = .systemFont(ofSize: 14)
