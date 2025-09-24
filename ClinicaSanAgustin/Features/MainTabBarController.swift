@@ -20,6 +20,9 @@ final class MainTabBarController: UITabBarController {
     private lazy var homeVC: HomeViewController = {
         let vc = HomeViewController(storage: StorageService(), riskEngine: RiskEngine())
         vc.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 2)
+        vc.onOpenCheckIn = { [weak self] in self?.openCheckIn() }
+        vc.onOpenAppointment = { [weak self] in self?.openAppointment() }
+        vc.onOpenPlanAction = { [weak self] in self?.openPlanAction() }
         return vc
     }()
     private lazy var planVC: PlanActionViewController = {
@@ -35,7 +38,25 @@ final class MainTabBarController: UITabBarController {
     }()
 
     private func setupTabs() {
-        viewControllers = [estadoVC, appointmentVC, homeVC, planVC, profileVC]
+        let estadoNav = UINavigationController(rootViewController: estadoVC)
+        let appointmentNav = UINavigationController(rootViewController: appointmentVC)
+        let homeNav = UINavigationController(rootViewController: homeVC)
+        let planNav = UINavigationController(rootViewController: planVC)
+        let profileNav = UINavigationController(rootViewController: profileVC)
+        viewControllers = [estadoNav, appointmentNav, homeNav, planNav, profileNav]
+    }
+
+    private func openCheckIn() {
+        let vc = CheckInViewController(storage: StorageService(), riskEngine: RiskEngine())
+        self.selectedViewController?.navigationController?.pushViewController(vc, animated: true)
+    }
+    private func openAppointment() {
+        let vc = AppointmentRequestViewController(storage: StorageService())
+        self.selectedViewController?.navigationController?.pushViewController(vc, animated: true)
+    }
+    private func openPlanAction() {
+        let vc = PlanActionViewController()
+        self.selectedViewController?.navigationController?.pushViewController(vc, animated: true)
     }
 
     private func handleLogout() {

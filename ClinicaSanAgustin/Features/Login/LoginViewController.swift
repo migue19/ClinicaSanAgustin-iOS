@@ -11,10 +11,18 @@ final class LoginViewController: UIViewController {
         return iv
     }()
     private let emailField: UITextField = {
-        let f = UITextField(); f.placeholder = "Correo electrónico"; f.borderStyle = .roundedRect; f.autocapitalizationType = .none; return f
+        let f = UITextField();
+        f.placeholder = "Correo electrónico";
+        f.borderStyle = .roundedRect;
+        f.autocapitalizationType = .none;
+        f.text = "someuser@example.com"
+        return f
     }()
     private let passwordField: UITextField = {
-        let f = UITextField(); f.placeholder = "Contraseña"; f.borderStyle = .roundedRect; f.isSecureTextEntry = true; return f
+        let f = UITextField(); f.placeholder = "Contraseña"; f.borderStyle = .roundedRect;
+        f.isSecureTextEntry = true;
+        f.text = "password123"
+        return f
     }()
     private let loginButton: PrimaryButton = {
         let b = PrimaryButton(title: "Iniciar sesión")
