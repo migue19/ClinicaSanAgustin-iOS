@@ -18,11 +18,8 @@ final class LoginViewController: BaseController {
         f.text = "someuser@example.com"
         return f
     }()
-    private let passwordField: UITextField = {
-        let f = UITextField(); f.placeholder = "Contraseña"; f.borderStyle = .roundedRect;
-        f.isSecureTextEntry = true;
-        f.text = "password123"
-        return f
+    private let passwordField: PasswordTextField = {
+        let f = PasswordTextField(); f.placeholder = "Contraseña"; f.text = "password123"; return f
     }()
     private let loginButton: PrimaryButton = {
         let b = PrimaryButton(title: "Iniciar sesión")
@@ -37,13 +34,6 @@ final class LoginViewController: BaseController {
     private let passwordLabel: UILabel = {
         let l = UILabel(); l.text = "Contraseña"; l.font = .systemFont(ofSize: 14, weight: .medium); l.textColor = .secondaryLabel; return l
     }()
-    private let passwordEyeButton: UIButton = {
-        let b = UIButton(type: .system)
-        b.setImage(UIImage(systemName: "eye"), for: .normal)
-        b.tintColor = .secondaryLabel
-        b.translatesAutoresizingMaskIntoConstraints = false
-        return b
-    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,13 +43,7 @@ final class LoginViewController: BaseController {
     }
 
     private func setupUI() {
-        let passwordStack = UIStackView(arrangedSubviews: [passwordField, passwordEyeButton])
-        passwordStack.axis = .horizontal
-        passwordStack.spacing = 8
-        passwordStack.translatesAutoresizingMaskIntoConstraints = false
-        passwordField.rightView = passwordEyeButton
-        passwordField.rightViewMode = .always
-        let stack = UIStackView(arrangedSubviews: [logoImageView, emailLabel, emailField, passwordLabel, passwordStack, loginButton, registerButton])
+        let stack = UIStackView(arrangedSubviews: [logoImageView, emailLabel, emailField, passwordLabel, passwordField, loginButton, registerButton])
         stack.axis = .vertical; stack.spacing = 16; stack.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stack)
         NSLayoutConstraint.activate([
@@ -70,10 +54,7 @@ final class LoginViewController: BaseController {
         ])
         loginButton.addTarget(self, action: #selector(loginTap), for: .touchUpInside)
         registerButton.addTarget(self, action: #selector(registerTap), for: .touchUpInside)
-        passwordEyeButton.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
     }
-
-    
 
     @objc private func loginTap() {
         hideKeyboard()
@@ -89,12 +70,6 @@ final class LoginViewController: BaseController {
 
     @objc private func registerTap() {
         onShowRegister?()
-    }
-
-    @objc private func togglePasswordVisibility() {
-        passwordField.isSecureTextEntry.toggle()
-        let imageName = passwordField.isSecureTextEntry ? "eye" : "eye.slash"
-        passwordEyeButton.setImage(UIImage(systemName: imageName), for: .normal)
     }
 
     private func showAlert(_ msg: String) {
