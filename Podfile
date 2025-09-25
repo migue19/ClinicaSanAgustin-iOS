@@ -10,6 +10,7 @@ target 'ClinicaSanAgustin' do
   target 'ClinicaSanAgustinTests' do
     inherit! :search_paths
     # Pods for testing
+    pod 'FirebaseAuth'
     pod 'ConnectionLayer'
   end
 

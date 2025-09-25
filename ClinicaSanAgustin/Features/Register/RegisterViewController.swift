@@ -52,8 +52,22 @@ final class RegisterViewController: UIViewController {
             showAlert("Completa todos los campos y asegúrate que las contraseñas coincidan")
             return
         }
-        // Simulate success
-        onRegisterSuccess?()
+        registerButton.isEnabled = false
+//        Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
+//            DispatchQueue.main.async {
+//                self?.registerButton.isEnabled = true
+//                if let error = error {
+//                    self?.showAlert(error.localizedDescription)
+//                    return
+//                }
+//                // Optionally update displayName
+//                if let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest() {
+//                    changeRequest.displayName = name
+//                    changeRequest.commitChanges { _ in }
+//                }
+//                self?.onRegisterSuccess?()
+//            }
+//        }
     }
 
     @objc private func loginTap() {

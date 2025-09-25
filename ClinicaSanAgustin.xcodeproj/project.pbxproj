@@ -65,11 +65,15 @@
 		};
 		F24C59ED2E81E16A000FD6A1 /* ClinicaSanAgustinTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = ClinicaSanAgustinTests;
 			sourceTree = "<group>";
 		};
 		F24C59F72E81E16B000FD6A1 /* ClinicaSanAgustinUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = ClinicaSanAgustinUITests;
 			sourceTree = "<group>";
 		};
@@ -316,13 +320,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ClinicaSanAgustinTests/Pods-ClinicaSanAgustinTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ClinicaSanAgustinTests/Pods-ClinicaSanAgustinTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
