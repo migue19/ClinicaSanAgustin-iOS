@@ -1,5 +1,4 @@
 PODS:
-  - ConnectionLayer (1.0.2)
   - FirebaseAppCheckInterop (12.3.0)
   - FirebaseAuth (12.3.0):
     - FirebaseAppCheckInterop (~> 12.3.0)
@@ -44,12 +43,10 @@ PODS:
   - RecaptchaInterop (101.0.0)
 
 DEPENDENCIES:
-  - ConnectionLayer
   - FirebaseAuth
 
 SPEC REPOS:
   trunk:
-    - ConnectionLayer
     - FirebaseAppCheckInterop
     - FirebaseAuth
     - FirebaseAuthInterop
@@ -61,7 +58,6 @@ SPEC REPOS:
     - RecaptchaInterop
 
 SPEC CHECKSUMS:
-  ConnectionLayer: 85c2173fb2001919f9991dc71254e84451b2dc2b
   FirebaseAppCheckInterop: 3a8527abb8bb89fb1bd2bd3d1d7b463c0ceb0cbf
   FirebaseAuth: 4fdd7ee2da745f79145124f5191639d2ea756a77
   FirebaseAuthInterop: a7c394818a93d374c543ca085f3a46ab7c71372e
@@ -72,6 +68,6 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 02d6e866e90bc236f48a703a041dfe43e6221a29
   RecaptchaInterop: 11e0b637842dfb48308d242afc3f448062325aba
 
-PODFILE CHECKSUM: f865bc7e5e8d6405b522cc5605b1776402dccde0
+PODFILE CHECKSUM: 6c1a7a77188dc56884b2bb79595e49f79d172acf
 
 COCOAPODS: 1.16.2

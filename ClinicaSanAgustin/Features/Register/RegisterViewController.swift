@@ -1,9 +1,12 @@
 import UIKit
-
-final class RegisterViewController: UIViewController {
+import FirebaseAuth
+final class RegisterViewController: BaseController {
     var onRegisterSuccess: (() -> Void)?
     var onShowLogin: (() -> Void)?
 
+    private let titleLabel: UILabel = {
+        let l = UILabel(); l.text = "Crear cuenta"; l.font = .systemFont(ofSize: 24, weight: .bold); l.textAlignment = .center; return l
+    }()
     private let nameField: UITextField = {
         let f = UITextField(); f.placeholder = "Nombre"; f.borderStyle = .roundedRect; f.autocapitalizationType = .words; return f
     }()
@@ -17,7 +20,7 @@ final class RegisterViewController: UIViewController {
         let f = UITextField(); f.placeholder = "Confirmar contraseña"; f.borderStyle = .roundedRect; f.isSecureTextEntry = true; return f
     }()
     private let registerButton: PrimaryButton = {
-        let b = PrimaryButton(title: "Registrarse")
+        let b = PrimaryButton(title: "Registrate")
         return b
     }()
     private let loginButton: UIButton = {
@@ -32,8 +35,12 @@ final class RegisterViewController: UIViewController {
     }
 
     private func setupUI() {
-        let stack = UIStackView(arrangedSubviews: [nameField, emailField, passwordField, confirmField, registerButton, loginButton])
-        stack.axis = .vertical; stack.spacing = 16; stack.translatesAutoresizingMaskIntoConstraints = false
+        let stack = UIStackView(arrangedSubviews: [titleLabel, nameField, emailField, passwordField, confirmField, registerButton, loginButton])
+        stack.axis = .vertical
+        stack.spacing = 16
+        stack.setCustomSpacing(40, after: confirmField)
+        stack.setCustomSpacing(40, after: titleLabel)
+        stack.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stack)
         NSLayoutConstraint.activate([
             stack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -53,21 +60,21 @@ final class RegisterViewController: UIViewController {
             return
         }
         registerButton.isEnabled = false
-//        Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
-//            DispatchQueue.main.async {
-//                self?.registerButton.isEnabled = true
-//                if let error = error {
-//                    self?.showAlert(error.localizedDescription)
-//                    return
-//                }
-//                // Optionally update displayName
-//                if let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest() {
-//                    changeRequest.displayName = name
-//                    changeRequest.commitChanges { _ in }
-//                }
-//                self?.onRegisterSuccess?()
-//            }
-//        }
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
+            DispatchQueue.main.async {
+                self?.registerButton.isEnabled = true
+                if let error = error {
+                    self?.showAlert(error.localizedDescription)
+                    return
+                }
+                // Optionally update displayName
+                if let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest() {
+                    changeRequest.displayName = name
+                    changeRequest.commitChanges { _ in }
+                }
+                self?.onRegisterSuccess?()
+            }
+        }
     }
 
     @objc private func loginTap() {

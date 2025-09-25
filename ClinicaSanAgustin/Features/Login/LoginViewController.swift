@@ -1,6 +1,6 @@
 import UIKit
 
-final class LoginViewController: UIViewController {
+final class LoginViewController: BaseController {
     var onLoginSuccess: (() -> Void)?
     var onShowRegister: (() -> Void)?
 
@@ -50,9 +50,6 @@ final class LoginViewController: UIViewController {
         view.backgroundColor = .systemBackground
         title = "Iniciar sesión"
         setupUI()
-        let tap = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
     }
 
     private func setupUI() {
@@ -76,9 +73,7 @@ final class LoginViewController: UIViewController {
         passwordEyeButton.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
     }
 
-    @objc private func hideKeyboard() {
-        view.endEditing(true)
-    }
+    
 
     @objc private func loginTap() {
         hideKeyboard()

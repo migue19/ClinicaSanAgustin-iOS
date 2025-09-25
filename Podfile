@@ -6,12 +6,11 @@ target 'ClinicaSanAgustin' do
   use_frameworks!
 
   # Pods for ClinicaSanAgustin
-
+  pod 'FirebaseAuth'
   target 'ClinicaSanAgustinTests' do
     inherit! :search_paths
     # Pods for testing
-    pod 'FirebaseAuth'
-    pod 'ConnectionLayer'
+    
   end
 
   target 'ClinicaSanAgustinUITests' do
